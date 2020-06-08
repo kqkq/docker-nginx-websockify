@@ -10,8 +10,9 @@ RUN cd nginx-${NGINX_VERSION} && ./configure --with-compat --add-dynamic-module=
 
 FROM nginx:${NGINX_VERSION}
 COPY --from=builder /root/nginx-1.19.0/objs/ngx_http_websockify_module.so /etc/nginx/modules
+RUN sed -i '2 a load_module modules/ngx_http_websockify_module.so;' /etc/nginx/nginx.conf
 ENTRYPOINT ["/docker-entrypoint.sh"]
-EXPOSE 80
+EXPOSE 80 443
 STOPSIGNAL SIGTERM
 
 CMD ["nginx", "-g", "daemon off;"]
